@@ -1,0 +1,30 @@
+package com.task.csv;
+
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class GenerateCSV
+{
+    protected void generateCsvFile(ReadCSV result)
+    {
+        try
+        {
+            FileWriter writer = new FileWriter(result.filePath);
+            for (int i = 0; i < result.list.size(); i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    writer.append(result.list.get(i)[j]);
+                }
+                writer.append("\n");
+            }
+            writer.flush();
+            writer.close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+}
