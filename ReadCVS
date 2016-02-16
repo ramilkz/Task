@@ -1,0 +1,83 @@
+package com.task.cvs;
+
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Objects;
+
+public class ReadCVS
+{
+    protected ArrayList<String[]> list;
+    protected String[] code;
+    protected String filePath;
+
+    public static void main(String[] args) throws IOException
+    {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String filePathA = reader.readLine();
+        String filePathB = reader.readLine();
+        ReadCVS obj_A = new ReadCVS(filePathA);
+        obj_A.run();
+        ReadCVS obj_B = new ReadCVS(filePathB);
+        obj_B.run();
+        String resultPath = reader.readLine();
+        ReadCVS result = new ReadCVS(resultPath);
+        obj_A.compare(obj_B.list, result);
+        GenerateCSV res = new GenerateCSV();
+        res.generateCsvFile(result);
+    }
+
+    ReadCVS(String filePath)
+    {
+        list = new ArrayList<>();
+        this.filePath = filePath;
+    }
+
+    public void compare(ArrayList<String[]> b, ReadCVS result)
+    {
+        for (int i = 0; i < this.list.size(); i++)
+            for(int j = 0; j < b.size(); j++)
+            {
+                if (Objects.equals(this.list.get(i)[0], b.get(j)[0]))
+                {
+                    String[] s = new String[]{this.list.get(i)[0] + ",", this.list.get(i)[1] + ",", b.get(j)[1]};
+                    result.list.add(s);
+                }
+            }
+    }
+
+    public void run()
+    {
+        String cvsFile = filePath;
+        BufferedReader br = null;
+        String line = "";
+        String csvSplitBy = ",";
+        try
+        {
+            br = new BufferedReader(new FileReader(cvsFile));
+            while ((line = br.readLine()) != null)
+            {
+                code = line.split((csvSplitBy));
+                list.add(code);
+            }
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } finally
+        {
+            if (br != null)
+            {
+                try
+                {
+                    br.close();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
